@@ -1,55 +1,63 @@
-=== Point-In-Polygon Benchmark with Logging ===
+=== Point-In-Polygon Benchmark with LONG DOUBLE Precision ===
 
 OpenMP threads available: 12
+Precision: long double (16 bytes)
 
 ─── Triangle / 1K pts  [poly=3 | pts=1000]
-Sol1 Naive RayCast: 0.033 ms
-Sol2 Strip Grid: 0.050 ms
-Sol3 Sorted Edges: 0.042 ms
-Sol4 Strip+InvSlope: 0.325 ms
-Sol5 Multithreaded: 4.057 ms
+Sol1 Naive (LD): 0.020 ms
+Sol2 Strip (LD): 0.043 ms
+Sol3 Sorted (LD): 0.037 ms
+Sol4 InvSlope (LD): 0.135 ms
+Sol5 Multithread (LD): 0.599 ms
+Sol6 BoundaryOut (LD): 0.222 ms
 
 ─── Octagon / 50K pts  [poly=8 | pts=50000]
-Sol1 Naive RayCast: 5.417 ms
-Sol2 Strip Grid: 4.113 ms
-Sol3 Sorted Edges: 3.418 ms
-Sol4 Strip+InvSlope: 17.724 ms
-Sol5 Multithreaded: 1.388 ms
+Sol1 Naive (LD): 3.751 ms
+Sol2 Strip (LD): 3.053 ms
+Sol3 Sorted (LD): 3.512 ms
+Sol4 InvSlope (LD): 11.357 ms
+Sol5 Multithread (LD): 0.446 ms
+Sol6 BoundaryOut (LD): 2.354 ms
 
 ─── Star-12 (concave)/200K  [poly=24 | pts=200000]
-Sol1 Naive RayCast: 28.228 ms
-Sol2 Strip Grid: 10.668 ms
-Sol3 Sorted Edges: 12.283 ms
-Sol4 Strip+InvSlope: 44.608 ms
-Sol5 Multithreaded: 1.037 ms
+Sol1 Naive (LD): 19.826 ms
+Sol2 Strip (LD): 11.521 ms
+Sol3 Sorted (LD): 15.578 ms
+Sol4 InvSlope (LD): 38.887 ms
+Sol5 Multithread (LD): 1.274 ms
+Sol6 BoundaryOut (LD): 11.990 ms
 
 ─── Convex-1000 / 200K pts  [poly=1000 | pts=200000]
-Sol1 Naive RayCast: 397.536 ms
-Sol2 Strip Grid: 11.176 ms
-Sol3 Sorted Edges: 91.216 ms
-Sol4 Strip+InvSlope: 38.847 ms
-Sol5 Multithreaded: 1.633 ms
+Sol1 Naive (LD): 380.594 ms
+Sol2 Strip (LD): 14.001 ms
+Sol3 Sorted (LD): 155.484 ms
+Sol4 InvSlope (LD): 35.812 ms
+Sol5 Multithread (LD): 2.033 ms
+Sol6 BoundaryOut (LD): 304.748 ms
 
 ─── Convex-64 / 500K dense  [poly=64 | pts=500000]
-Sol1 Naive RayCast: 82.570 ms
-Sol2 Strip Grid: 21.977 ms
-Sol3 Sorted Edges: 44.259 ms
-Sol4 Strip+InvSlope: 198.305 ms
-Sol5 Multithreaded: 5.091 ms
+Sol1 Naive (LD): 85.466 ms
+Sol2 Strip (LD): 31.563 ms
+Sol3 Sorted (LD): 60.421 ms
+Sol4 InvSlope (LD): 97.025 ms
+Sol5 Multithread (LD): 3.104 ms
+Sol6 BoundaryOut (LD): 58.009 ms
 
 ─── Convex-4096 / 100K pts  [poly=4096 | pts=100000]
-Sol1 Naive RayCast: 759.783 ms
-Sol2 Strip Grid: 7.180 ms
-Sol3 Sorted Edges: 155.793 ms
-Sol4 Strip+InvSlope: 16.088 ms
-Sol5 Multithreaded: 1.121 ms
+Sol1 Naive (LD): 789.510 ms
+Sol2 Strip (LD): 9.670 ms
+Sol3 Sorted (LD): 348.187 ms
+Sol4 InvSlope (LD): 21.721 ms
+Sol5 Multithread (LD): 1.756 ms
+Sol6 BoundaryOut (LD): 641.458 ms
 
 === SUMMARY ===
-Sol1 Naive RayCast: Total=1273.566 ms, Wins=1
-Sol2 Strip Grid: Total=55.164 ms, Wins=0
-Sol3 Sorted Edges: Total=307.012 ms, Wins=0
-Sol4 Strip+InvSlope: Total=315.896 ms, Wins=0
-Sol5 Multithreaded: Total=14.326 ms, Wins=5
+Sol1 Naive (LD): Total=1279.167 ms, Wins=1
+Sol2 Strip (LD): Total=69.851 ms, Wins=0
+Sol3 Sorted (LD): Total=583.219 ms, Wins=0
+Sol4 InvSlope (LD): Total=204.937 ms, Wins=0
+Sol5 Multithread (LD): Total=9.212 ms, Wins=5
+Sol6 BoundaryOut (LD): Total=1018.782 ms, Wins=0
 
-Overall winner: Sol5 Multithreaded
+Overall winner: Sol5 Multithread (LD)
 All results match reference (Solution1). OK.

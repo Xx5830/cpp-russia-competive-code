@@ -23,11 +23,11 @@ class Solution1 {
         const int n = (int)polygon.size();
         result.resize(points.size());
         for (size_t pi = 0; pi < points.size(); ++pi) {
-            float px = points[pi].x, py = points[pi].y;
+            long double px = points[pi].x, py = points[pi].y;
             int c = 0;
             for (int i = 0, j = n - 1; i < n; j = i++) {
-                float xi = polygon[i].x, yi = polygon[i].y;
-                float xj = polygon[j].x, yj = polygon[j].y;
+                long double xi = polygon[i].x, yi = polygon[i].y;
+                long double xj = polygon[j].x, yj = polygon[j].y;
                 if (((yi > py) != (yj > py)) && (px < (xj - xi) * (py - yi) / (yj - yi) + xi))
                     ++c;
             }
@@ -38,34 +38,34 @@ class Solution1 {
 
 class Solution2 {
     struct Segment {
-        float x0, y0, x1, y1;
+        long double x0, y0, x1, y1;
     };
     std::vector<std::vector<Segment>> seg_;
-    float minX_, minY_, maxX_, maxY_, count_blocks_h;
+    long double minX_, minY_, maxX_, maxY_, count_blocks_h;
     int total_seg_;
 
     void build(const std::vector<Point>& poly) {
         int n = (int)poly.size();
-        minX_ = minY_ = 1e30f;
-        maxX_ = maxY_ = -1e30f;
+        minX_ = minY_ = 1e30L;
+        maxX_ = maxY_ = -1e30L;
         for (auto& p : poly) {
-            minX_ = std::min(minX_, p.x);
-            maxX_ = std::max(maxX_, p.x);
-            minY_ = std::min(minY_, p.y);
-            maxY_ = std::max(maxY_, p.y);
+            minX_ = std::min(minX_, (long double)p.x);
+            maxX_ = std::max(maxX_, (long double)p.x);
+            minY_ = std::min(minY_, (long double)p.y);
+            maxY_ = std::max(maxY_, (long double)p.y);
         }
-        minX_ -= 1e-4f;
-        minY_ -= 1e-4f;
-        maxX_ += 1e-4f;
-        maxY_ += 1e-4f;
-        total_seg_ = std::max(8, std::min(2048, (int)(4.f * std::sqrt((float)n))));
+        minX_ -= 1e-9L;
+        minY_ -= 1e-9L;
+        maxX_ += 1e-9L;
+        maxY_ += 1e-9L;
+        total_seg_ = std::max(8, std::min(2048, (int)(4.0L * std::sqrt((long double)n))));
         seg_.assign(total_seg_, {});
         count_blocks_h = total_seg_ / (maxY_ - minY_);
         for (int i = 0, j = n - 1; i < n; j = i++) {
-            float y0 = poly[i].y, y1 = poly[j].y;
+            long double y0 = poly[i].y, y1 = poly[j].y;
             int r0 = std::max(0, std::min(total_seg_ - 1, (int)((std::min(y0, y1) - minY_) * count_blocks_h)));
             int r1 = std::max(0, std::min(total_seg_ - 1, (int)((std::max(y0, y1) - minY_) * count_blocks_h)));
-            Segment seg{poly[i].x, y0, poly[j].x, y1};
+            Segment seg{(long double)poly[i].x, y0, (long double)poly[j].x, y1};
             for (int r = r0; r <= r1; ++r) {
                 seg_[r].push_back(seg);
             }
@@ -77,7 +77,7 @@ class Solution2 {
         build(polygon);
         result.resize(points.size());
         for (size_t i = 0; i < points.size(); ++i) {
-            float x = points[i].x, y = points[i].y;
+            long double x = points[i].x, y = points[i].y;
             if (x <= minX_ || x >= maxX_ || y <= minY_ || y >= maxY_) {
                 result[i] = 0;
                 continue;
@@ -100,19 +100,19 @@ class Solution2 {
 
 class Solution3 {
     struct Seg {
-        float x0, y0, x1, y1, lo, hi;
+        long double x0, y0, x1, y1, lo, hi;
     };
     std::vector<Seg> segs_;
-    float minX_, minY_, maxX_, maxY_;
+    long double minX_, minY_, maxX_, maxY_;
 
     void build(const std::vector<Point>& poly) {
         int n = (int)poly.size();
-        minX_ = minY_ = 1e30f;
-        maxX_ = maxY_ = -1e30f;
+        minX_ = minY_ = 1e30L;
+        maxX_ = maxY_ = -1e30L;
         segs_.clear();
         segs_.reserve(n);
         for (int i = 0, j = n - 1; i < n; j = i++) {
-            float x0 = poly[i].x, y0 = poly[i].y, x1 = poly[j].x, y1 = poly[j].y;
+            long double x0 = poly[i].x, y0 = poly[i].y, x1 = poly[j].x, y1 = poly[j].y;
             minX_ = std::min(minX_, x0);
             maxX_ = std::max(maxX_, x0);
             minY_ = std::min(minY_, y0);
@@ -127,7 +127,7 @@ class Solution3 {
         build(polygon);
         result.resize(points.size());
         for (size_t pi = 0; pi < points.size(); ++pi) {
-            float px = points[pi].x, py = points[pi].y;
+            long double px = points[pi].x, py = points[pi].y;
             if (px < minX_ || px > maxX_ || py < minY_ || py > maxY_) {
                 result[pi] = 0;
                 continue;
@@ -152,33 +152,33 @@ class Solution3 {
 
 class Solution4 {
     struct Segment {
-        float x0, y0, inv_slope, maxY;
+        long double x0, y0, inv_slope, maxY;
     };
     std::vector<std::vector<Segment>> segments_;
-    float minX_, minY_, maxX_, maxY_, invH_;
+    long double minX_, minY_, maxX_, maxY_, invH_;
     int total_seg_;
 
     void build(const std::vector<Point>& poly) {
         int n = (int)poly.size();
-        minX_ = minY_ = 1e30f;
-        maxX_ = maxY_ = -1e30f;
+        minX_ = minY_ = 1e30L;
+        maxX_ = maxY_ = -1e30L;
         for (auto& p : poly) {
-            minX_ = std::min(minX_, p.x);
-            maxX_ = std::max(maxX_, p.x);
-            minY_ = std::min(minY_, p.y);
-            maxY_ = std::max(maxY_, p.y);
+            minX_ = std::min(minX_, (long double)p.x);
+            maxX_ = std::max(maxX_, (long double)p.x);
+            minY_ = std::min(minY_, (long double)p.y);
+            maxY_ = std::max(maxY_, (long double)p.y);
         }
-        minX_ -= 1e-4f;
-        minY_ -= 1e-4f;
-        maxX_ += 1e-4f;
-        maxY_ += 1e-4f;
-        total_seg_ = std::max(8, std::min(2048, (int)(4.f * std::sqrt((float)n))));
+        minX_ -= 1e-9L;
+        minY_ -= 1e-9L;
+        maxX_ += 1e-9L;
+        maxY_ += 1e-9L;
+        total_seg_ = std::max(8, std::min(2048, (int)(4.0L * std::sqrt((long double)n))));
         segments_.assign(total_seg_, {});
         invH_ = total_seg_ / (maxY_ - minY_);
         for (int i = 0, j = n - 1; i < n; j = i++) {
-            float x0 = poly[i].x, y0 = poly[i].y, x1 = poly[j].x, y1 = poly[j].y;
-            float dy = y1 - y0;
-            if (std::fabs(dy) < 1e-9f) {
+            long double x0 = poly[i].x, y0 = poly[i].y, x1 = poly[j].x, y1 = poly[j].y;
+            long double dy = y1 - y0;
+            if (std::fabs(dy) < 1e-15L) {
                 continue;
             }
             if (dy < 0) {
@@ -204,7 +204,7 @@ class Solution4 {
         std::iota(order.begin(), order.end(), 0);
         std::sort(order.begin(), order.end(), [&](int a, int b) { return points[a].y < points[b].y; });
         for (int pi : order) {
-            float px = points[pi].x, py = points[pi].y;
+            long double px = points[pi].x, py = points[pi].y;
             if (px <= minX_ || px >= maxX_ || py <= minY_ || py >= maxY_) {
                 continue;
             }
@@ -223,33 +223,33 @@ class Solution4 {
 
 class Solution5 {
     struct Segment {
-        float x0, y0, inv_slope, maxY;
+        long double x0, y0, inv_slope, maxY;
     };
     std::vector<std::vector<Segment>> segments_;
-    float minX_, minY_, maxX_, maxY_, invH_;
+    long double minX_, minY_, maxX_, maxY_, invH_;
     int total_seg_;
 
     void build(const std::vector<Point>& poly) {
         int n = (int)poly.size();
-        minX_ = minY_ = 1e30f;
-        maxX_ = maxY_ = -1e30f;
+        minX_ = minY_ = 1e30L;
+        maxX_ = maxY_ = -1e30L;
         for (auto& p : poly) {
-            minX_ = std::min(minX_, p.x);
-            maxX_ = std::max(maxX_, p.x);
-            minY_ = std::min(minY_, p.y);
-            maxY_ = std::max(maxY_, p.y);
+            minX_ = std::min(minX_, (long double)p.x);
+            maxX_ = std::max(maxX_, (long double)p.x);
+            minY_ = std::min(minY_, (long double)p.y);
+            maxY_ = std::max(maxY_, (long double)p.y);
         }
-        minX_ -= 1e-4f;
-        minY_ -= 1e-4f;
-        maxX_ += 1e-4f;
-        maxY_ += 1e-4f;
-        total_seg_ = std::max(8, std::min(2048, (int)(4.f * std::sqrt((float)n))));
+        minX_ -= 1e-9L;
+        minY_ -= 1e-9L;
+        maxX_ += 1e-9L;
+        maxY_ += 1e-9L;
+        total_seg_ = std::max(8, std::min(2048, (int)(4.0L * std::sqrt((long double)n))));
         segments_.assign(total_seg_, {});
         invH_ = total_seg_ / (maxY_ - minY_);
         for (int i = 0, j = n - 1; i < n; j = i++) {
-            float x0 = poly[i].x, y0 = poly[i].y, x1 = poly[j].x, y1 = poly[j].y;
-            float dy = y1 - y0;
-            if (std::fabs(dy) < 1e-9f) {
+            long double x0 = poly[i].x, y0 = poly[i].y, x1 = poly[j].x, y1 = poly[j].y;
+            long double dy = y1 - y0;
+            if (std::fabs(dy) < 1e-15L) {
                 continue;
             }
             if (dy < 0) {
@@ -274,10 +274,119 @@ class Solution5 {
 
 #pragma omp parallel for schedule(dynamic, 1024)
         for (int pi = 0; pi < m; ++pi) {
-            float px = points[pi].x, py = points[pi].y;
+            long double px = points[pi].x, py = points[pi].y;
             if (px <= minX_ || px >= maxX_ || py <= minY_ || py >= maxY_) {
                 continue;
             }
+            int s = std::max(0, std::min(total_seg_ - 1, (int)((py - minY_) * invH_)));
+            int c = 0;
+            for (auto& seg : segments_[s]) {
+                if (seg.y0 >= py || seg.maxY < py) {
+                    continue;
+                }
+                c += (px < seg.x0 + seg.inv_slope * (py - seg.y0)) ? 1 : 0;
+            }
+            result[pi] = c & 1;
+        }
+    }
+};
+
+class Solution6 {
+    struct Segment {
+        long double x0, y0, inv_slope, maxY;
+    };
+    std::vector<std::vector<Segment>> segments_;
+    long double minX_, minY_, maxX_, maxY_, invH_;
+    int total_seg_;
+    static constexpr long double EPSILON = 1e-12L;
+
+    void build(const std::vector<Point>& poly) {
+        int n = (int)poly.size();
+        minX_ = minY_ = 1e30L;
+        maxX_ = maxY_ = -1e30L;
+        for (auto& p : poly) {
+            minX_ = std::min(minX_, (long double)p.x);
+            maxX_ = std::max(maxX_, (long double)p.x);
+            minY_ = std::min(minY_, (long double)p.y);
+            maxY_ = std::max(maxY_, (long double)p.y);
+        }
+        minX_ -= 1e-9L;
+        minY_ -= 1e-9L;
+        maxX_ += 1e-9L;
+        maxY_ += 1e-9L;
+        total_seg_ = std::max(8, std::min(2048, (int)(4.0L * std::sqrt((long double)n))));
+        segments_.assign(total_seg_, {});
+        invH_ = total_seg_ / (maxY_ - minY_);
+        for (int i = 0, j = n - 1; i < n; j = i++) {
+            long double x0 = poly[i].x, y0 = poly[i].y, x1 = poly[j].x, y1 = poly[j].y;
+            long double dy = y1 - y0;
+            if (std::fabs(dy) < 1e-15L) {
+                continue;
+            }
+            if (dy < 0) {
+                std::swap(x0, x1);
+                std::swap(y0, y1);
+                dy = -dy;
+            }
+            Segment seg{x0, y0, (x1 - x0) / dy, y1};
+            int s0 = std::max(0, std::min(total_seg_ - 1, (int)((y0 - minY_) * invH_)));
+            int s1 = std::max(0, std::min(total_seg_ - 1, (int)((y1 - minY_) * invH_)));
+            for (int s = s0; s <= s1; ++s) {
+                segments_[s].push_back(seg);
+            }
+        }
+    }
+
+    bool isOnBoundary(long double px, long double py, const std::vector<Point>& polygon) {
+        int n = (int)polygon.size();
+        for (int i = 0, j = n - 1; i < n; j = i++) {
+            long double x0 = polygon[j].x, y0 = polygon[j].y;
+            long double x1 = polygon[i].x, y1 = polygon[i].y;
+
+            long double dx = x1 - x0, dy = y1 - y0;
+            long double len2 = dx * dx + dy * dy;
+
+            if (len2 < EPSILON) {
+                if (std::fabs(px - x0) < EPSILON && std::fabs(py - y0) < EPSILON)
+                    return true;
+                continue;
+            }
+
+            long double t = ((px - x0) * dx + (py - y0) * dy) / len2;
+
+            if (t >= -EPSILON && t <= 1.0L + EPSILON) {
+                long double projX = x0 + t * dx;
+                long double projY = y0 + t * dy;
+                long double dist2 = (px - projX) * (px - projX) + (py - projY) * (py - projY);
+
+                if (dist2 < EPSILON * EPSILON) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+  public:
+    void TestPoints(const std::vector<Point>& polygon, const std::vector<Point>& points, std::vector<int>& result) {
+        build(polygon);
+        int m = (int)points.size();
+        result.assign(m, 0);
+
+#pragma omp parallel for schedule(dynamic, 1024)
+        for (int pi = 0; pi < m; ++pi) {
+            long double px = points[pi].x, py = points[pi].y;
+
+            if (isOnBoundary(px, py, polygon)) {
+                result[pi] = 0;
+                continue;
+            }
+
+            if (px <= minX_ || px >= maxX_ || py <= minY_ || py >= maxY_) {
+                result[pi] = 0;
+                continue;
+            }
+
             int s = std::max(0, std::min(total_seg_ - 1, (int)((py - minY_) * invH_)));
             int c = 0;
             for (auto& seg : segments_[s]) {
@@ -370,7 +479,7 @@ struct TC {
 
 int main() {
     std::ofstream logFile("tests_log2");
-    logFile << "=== Point-In-Polygon Benchmark with Logging ===\n\n";
+    logFile << "=== Point-In-Polygon Benchmark with LONG DOUBLE Precision ===\n\n";
 
     std::mt19937 rng(42);
     std::vector<TC> tests = {
@@ -394,19 +503,23 @@ int main() {
     Solution3 s3;
     Solution4 s4;
     Solution5 s5;
+    Solution6 s6;
 
     std::vector<Solver> sv = {
-        {"Sol1 Naive RayCast", [&](auto& p, auto& q, auto& o) { return runOne(s1, p, q, o); }},
-        {"Sol2 Strip Grid", [&](auto& p, auto& q, auto& o) { return runOne(s2, p, q, o); }},
-        {"Sol3 Sorted Edges", [&](auto& p, auto& q, auto& o) { return runOne(s3, p, q, o); }},
-        {"Sol4 Strip+InvSlope", [&](auto& p, auto& q, auto& o) { return runOne(s4, p, q, o); }},
-        {"Sol5 Multithreaded", [&](auto& p, auto& q, auto& o) { return runOne(s5, p, q, o); }},
+        {"Sol1 Naive (LD)", [&](auto& p, auto& q, auto& o) { return runOne(s1, p, q, o); }},
+        {"Sol2 Strip (LD)", [&](auto& p, auto& q, auto& o) { return runOne(s2, p, q, o); }},
+        {"Sol3 Sorted (LD)", [&](auto& p, auto& q, auto& o) { return runOne(s3, p, q, o); }},
+        {"Sol4 InvSlope (LD)", [&](auto& p, auto& q, auto& o) { return runOne(s4, p, q, o); }},
+        {"Sol5 Multithread (LD)", [&](auto& p, auto& q, auto& o) { return runOne(s5, p, q, o); }},
+        {"Sol6 BoundaryOut (LD)", [&](auto& p, auto& q, auto& o) { return runOne(s6, p, q, o); }},
     };
 
-    const int NW = 24, TW = 13;
-    std::cout << "\n=== Point-In-Polygon Benchmark ===\n";
-    std::cout << "OpenMP threads available: " << omp_get_max_threads() << "\n\n";
-    logFile << "OpenMP threads available: " << omp_get_max_threads() << "\n\n";
+    const int NW = 26, TW = 13;
+    std::cout << "\n=== Point-In-Polygon Benchmark (LONG DOUBLE) ===\n";
+    std::cout << "OpenMP threads available: " << omp_get_max_threads() << "\n";
+    std::cout << "Precision: long double (" << sizeof(long double) << " bytes)\n\n";
+    logFile << "OpenMP threads available: " << omp_get_max_threads() << "\n";
+    logFile << "Precision: long double (" << sizeof(long double) << " bytes)\n\n";
 
     for (auto& tc : tests) {
         std::cout << "─── " << tc.name << "  [poly=" << tc.poly.size() << " | pts=" << tc.pts.size() << "]\n";
@@ -423,7 +536,7 @@ int main() {
         for (size_t si = 0; si < sv.size(); ++si)
             times[si] = sv[si].run(tc.poly, tc.pts, outs[si]);
 
-        for (size_t si = 1; si < sv.size(); ++si)
+        for (size_t si = 1; si < sv.size() - 1; ++si)
             checkEq(ref, outs[si], sv[si].name, tc.name, logFile);
 
         int best = (int)(std::min_element(times.begin(), times.end()) - times.begin());
@@ -432,6 +545,8 @@ int main() {
                       << std::setprecision(3) << times[si];
             if ((int)si == best)
                 std::cout << "  ◄ BEST";
+            if (si == sv.size() - 1)
+                std::cout << "  [boundary=OUT]";
             std::cout << "\n";
             sv[si].tot += times[si];
 
