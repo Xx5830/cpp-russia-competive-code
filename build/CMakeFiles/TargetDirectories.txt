@@ -1,0 +1,3 @@
+/home/admin/Desktop/myProject/cpp-russia/cpp-russia-competive-code/build/CMakeFiles/my_program.dir
+/home/admin/Desktop/myProject/cpp-russia/cpp-russia-competive-code/build/CMakeFiles/edit_cache.dir
+/home/admin/Desktop/myProject/cpp-russia/cpp-russia-competive-code/build/CMakeFiles/rebuild_cache.dir
